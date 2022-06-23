@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+
+#Nginx Service
+  nginx:
+    container_name: "nginx"
+    build: .docker/nginx
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
+      - "443:443"
+    networks:
+      - app-api-network
+  
+#PHP Service
+  app:
+    container_name: "laravel-api"
+    build: .docker/php
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "9000:9000"
+    networks:
+      - app-api-network
+
+#Docker Networks
+networks:
+  app-api-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local
